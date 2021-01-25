@@ -4,9 +4,34 @@
     <meta charset="utf-8" />
     <title>webgl</title>
   </head>
-  <body onload="main();">
+  <body>
     <canvas id="surface" width="1000" height="1000"> </canvas>
     <script src="gl-matrix.js"></script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      precision mediump float;
+      attribute vec3 vertPosition;
+      attribute vec3 vertColor;
+      varying vec3 fragColor;
+      uniform mat4 mWorld;
+      uniform mat4 mView;
+      uniform mat4 mProj;
+
+      void main()
+      {
+        fragColor = vertColor;
+        gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec3 fragColor;
+      void main()
+      {
+        gl_FragColor = vec4(fragColor, 1.0);
+      }
+    </script>
+
     <script src="app.js"></script>
   </body>
 </html>
