@@ -1,3 +1,9 @@
+// Author - Ariel Mendez | A01020690
+// El codigo base de este proyecto esta inspirado en
+// el tutorial: https://www.youtube.com/watch?v=kB0ZVUrI4Aw
+
+// provides the clip space coordinates
+// attributes get the data from the buffer
 var vertexShaderSrc = [
   "precision mediump float;",
   "",
@@ -12,6 +18,8 @@ var vertexShaderSrc = [
   "}",
 ].join("\n");
 
+// provides color
+// fragColor (read, green, blue)
 var fragmentShaderSrc = [
   "precision mediump float;",
   "",
@@ -24,6 +32,7 @@ var fragmentShaderSrc = [
 
 var main = function () {
   const canvas = document.getElementById("surface");
+  // gets WebGLRenderingContext
   var gl = canvas.getContext("webgl");
 
   if (!gl) {
@@ -70,6 +79,7 @@ var main = function () {
   // create program
   var program = gl.createProgram();
 
+  // link the shaders to the program
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
