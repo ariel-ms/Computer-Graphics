@@ -71,11 +71,11 @@ var main = function () {
   // draws main scene
   drawScene();
 
-  function drawWall() {
+  function drawWall(transforms) {
     // create wall vertex buffer
     var wallVertexBufferObj = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
-    setWallData(gl, 0.0, 0.0, 0.0);
+    setWallData(gl, transforms.tx, transforms.ty, transforms.tz);
     
     // create wall index buffer
     var wallIndexBufferObj = gl.createBuffer();
@@ -129,6 +129,7 @@ var main = function () {
     var worldMatrix = new Float32Array(16);
     var viewMatrix = new Float32Array(16);
     var projMatrix = new Float32Array(16);
+
     glMatrix.mat4.identity(worldMatrix);
     glMatrix.mat4.lookAt(viewMatrix, [0, 0, -10], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
@@ -137,7 +138,19 @@ var main = function () {
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
-    drawWall();
+    const wall1Transforms = {
+      tx: 2.0,
+      ty: 0.0,
+      tz: 0.0,
+    }
+    drawWall(wall1Transforms);
+
+    const wall2Transforms = {
+      tx: -2.0,
+      ty: 0.0,
+      tz: 0.0,
+    }
+    drawWall(wall2Transforms);
   }
 };
 
