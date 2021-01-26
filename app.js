@@ -70,15 +70,17 @@ var main = function () {
   // create wall vertex buffer
   var wallVertexBufferObj = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
-  setWallData(gl);
+  setWallData(gl, 0.0, 0.0, 0.0);
 
   // create wall index buffer
   var wallIndexBufferObj = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);
   setWallIndexBuffer(gl);
 
+  // draws main scene
   drawScene();
 
+  // below are some helper functions
   function drawScene() {
     // clear canvas
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
@@ -122,7 +124,7 @@ var main = function () {
     var viewMatrix = new Float32Array(16);
     var projMatrix = new Float32Array(16);
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 0, -8], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 0, -10], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -131,7 +133,6 @@ var main = function () {
   
     var xRotationMatrix = new Float32Array(16);
     var yRotationMatrix = new Float32Array(16);
-  
     //
     // Main render loop
     //
@@ -140,13 +141,15 @@ var main = function () {
     var angle = 0;
     var loop = function () {
       angle = performance.now() / 1000 / 6 * 2 * Math.PI;
-      glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
-      glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
-      glMatrix.mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
-      gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+      // glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
+      // glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
+      // glMatrix.mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
+      // gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
   
       gl.clearColor(0.75, 0.85, 0.8, 1.0);
       gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+      // drawElements is used whenever we have an index buffer
       gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   
       requestAnimationFrame(loop);
@@ -156,45 +159,45 @@ var main = function () {
 
 };
 
-const setWallData = (gl) => {
+const setWallData = (gl, tx, ty, tz) => {
 
   var wallVertices = 
-  [ // X, Y, Z           R, G, B
+  [ // X, Y, Z                         R, G, B
 		// Top
-		-1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
-		-1.0, 1.0, 1.0,    0.5, 0.5, 0.5,
-		1.0, 1.0, 1.0,     0.5, 0.5, 0.5,
-		1.0, 1.0, -1.0,    0.5, 0.5, 0.5,
+		-1.0 + tx, 1.0 + ty, -1.0 + tz,    0.5, 0.5, 0.5,
+		-1.0 + tx, 1.0 + ty, 1.0 + tz,     0.5, 0.5, 0.5,
+		1.0 + tx, 1.0 + ty, 1.0 + tz,      0.5, 0.5, 0.5,
+		1.0 + tx, 1.0 + ty, -1.0 + tz,     0.5, 0.5, 0.5,
 
 		// Left
-		-1.0, 1.0, 1.0,    0.75, 0.25, 0.5,
-		-1.0, -1.0, 1.0,   0.75, 0.25, 0.5,
-		-1.0, -1.0, -1.0,  0.75, 0.25, 0.5,
-		-1.0, 1.0, -1.0,   0.75, 0.25, 0.5,
+		-1.0 + tx, 1.0 + ty, 1.0 + tz,    0.75, 0.25, 0.5,
+		-1.0 + tx, -1.0 + ty, 1.0 + tz,   0.75, 0.25, 0.5,
+		-1.0 + tx, -1.0 + ty, -1.0 + tz,  0.75, 0.25, 0.5,
+		-1.0 + tx, 1.0 + ty, -1.0 + tz,   0.75, 0.25, 0.5,
 
 		// Right
-		1.0, 1.0, 1.0,    0.25, 0.25, 0.75,
-		1.0, -1.0, 1.0,   0.25, 0.25, 0.75,
-		1.0, -1.0, -1.0,  0.25, 0.25, 0.75,
-		1.0, 1.0, -1.0,   0.25, 0.25, 0.75,
+		1.0 + tx, 1.0 + ty, 1.0 + tz,    0.25, 0.25, 0.75,
+		1.0 + tx, -1.0 + ty, 1.0 + tz,   0.25, 0.25, 0.75,
+		1.0 + tx, -1.0 + ty, -1.0 + tz,  0.25, 0.25, 0.75,
+		1.0 + tx, 1.0 + ty, -1.0 + tz,   0.25, 0.25, 0.75,
 
 		// Front
-		1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
-		1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-		-1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-		-1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
+		1.0 + tx, 1.0 + ty, 1.0 + tz,     1.0, 0.0, 0.15,
+		1.0 + tx, -1.0 + ty, 1.0 + tz,    1.0, 0.0, 0.15,
+		-1.0 + tx, -1.0 + ty, 1.0 + tz,   1.0, 0.0, 0.15,
+		-1.0 + tx, 1.0 + ty, 1.0 + tz,    1.0, 0.0, 0.15,
 
 		// Back
-		1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
-		1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-		-1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-		-1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
+		1.0 + tx, 1.0 + ty, -1.0 + tz,    0.0, 1.0, 0.15,
+		1.0 + tx, -1.0 + ty, -1.0 + tz,   0.0, 1.0, 0.15,
+		-1.0 + tx, -1.0 + ty, -1.0 + tz,  0.0, 1.0, 0.15,
+		-1.0 + tx, 1.0 + ty, -1.0 + tz,   0.0, 1.0, 0.15,
 
 		// Bottom
-		-1.0, -1.0, -1.0,   0.5, 0.5, 1.0,
-		-1.0, -1.0, 1.0,    0.5, 0.5, 1.0,
-		1.0, -1.0, 1.0,     0.5, 0.5, 1.0,
-		1.0, -1.0, -1.0,    0.5, 0.5, 1.0,
+		-1.0 + tx, -1.0 + ty, -1.0 + tz,   0.5, 0.5, 1.0,
+		-1.0 + tx, -1.0 + ty, 1.0 + tz,    0.5, 0.5, 1.0,
+		1.0 + tx, -1.0 + ty, 1.0 + tz,     0.5, 0.5, 1.0,
+		1.0 + tx, -1.0 + ty, -1.0 + tz,    0.5, 0.5, 1.0,
 	];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wallVertices), gl.STATIC_DRAW);
