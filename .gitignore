@@ -1,2 +1,5 @@
 # ios
-.DS_store
+.DS_Store
+
+# node
+node_modules
