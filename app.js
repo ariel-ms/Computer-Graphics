@@ -111,6 +111,41 @@ var main = function () {
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
 
+  function drawPlane(worldMatrix, matWorldUniformLocation) {
+    const planeBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, planeBuffer);
+    const positions = [
+      -1.0,  1.0,
+       1.0,  1.0,
+      -1.0, -1.0,
+       1.0, -1.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    // Tell OpenGL state machine which program should be active.
+    gl.useProgram(program);
+
+    // enable position attr
+    gl.enableVertexAttribArray(positionAttrLocation);
+
+    gl.vertexAttribPointer(
+      positionAttrLocation, // Attribute location
+      2, // Number of elements per attribute
+      gl.FLOAT, // Type of elements
+      gl.FALSE,
+      0, // Size of an individual vertex
+      0 // Offset from the beginning of a single vertex to this attribute
+    );
+
+    var identityMatrix = new Float32Array(16);
+    glMatrix.mat4.identity(identityMatrix);
+    
+    glMatrix.mat4.rotate(worldMatrix, identityMatrix, Math.PI / 4, [1, 0, 0]);
+    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
   function drawScene() {
     // clear canvas
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
@@ -151,6 +186,8 @@ var main = function () {
       tz: 0.0,
     }
     drawWall(wall2Transforms);
+
+    drawPlane(worldMatrix, matWorldUniformLocation);
   }
 };
 
