@@ -111,16 +111,14 @@ var main = function () {
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
 
-  function drawPlane(worldMatrix, matWorldUniformLocation) {
+  function drawPlane(planeTransforms) {
+
+    // destructure plane transformation attrs
+    const { tx, ty, tz, worldProps } = planeTransforms;
+
     const planeBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, planeBuffer);
-    const positions = [
-      -1.0,  1.0,
-       1.0,  1.0,
-      -1.0, -1.0,
-       1.0, -1.0,
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    setPlaneData(gl, tx, ty);
 
     // Tell OpenGL state machine which program should be active.
     gl.useProgram(program);
@@ -139,9 +137,9 @@ var main = function () {
 
     var identityMatrix = new Float32Array(16);
     glMatrix.mat4.identity(identityMatrix);
-    
-    glMatrix.mat4.rotate(worldMatrix, identityMatrix, Math.PI / 4, [1, 0, 0]);
-    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+
+    glMatrix.mat4.rotate(worldProps.worldMatrix, identityMatrix, Math.PI / 2, [1, 0, 0]);
+    gl.uniformMatrix4fv(worldProps.matWorldUniformLocation, gl.FALSE, worldProps.worldMatrix);
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -166,7 +164,7 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 0, -10], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 1, -15], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -175,19 +173,29 @@ var main = function () {
 
     const wall1Transforms = {
       tx: 2.0,
-      ty: 0.0,
+      ty: 1.0,
       tz: 0.0,
     }
     drawWall(wall1Transforms);
 
     const wall2Transforms = {
       tx: -2.0,
-      ty: 0.0,
+      ty: 1.0,
       tz: 0.0,
     }
     drawWall(wall2Transforms);
 
-    drawPlane(worldMatrix, matWorldUniformLocation);
+    const planeTransforms = {
+      tx: 0.0,
+      ty: 0.0,
+      tz: 0.0,
+      worldProps: {
+        worldMatrix,
+        matWorldUniformLocation,
+      },
+    };
+
+    drawPlane(planeTransforms);
   }
 };
 
@@ -263,6 +271,16 @@ const setWallIndexBuffer = (gl) => {
 		22, 20, 23
 	];
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
+}
+
+const setPlaneData = (gl, tx, ty) => {
+  const positions = [
+    -1.0 + tx,  1.0 + ty,
+     1.0 + tx,  1.0 + ty,
+    -1.0 + tx, -1.0 + ty,
+     1.0 + tx, -1.0 + ty,
+  ];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 }
 
 main();
