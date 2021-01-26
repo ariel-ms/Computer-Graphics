@@ -1,0 +1,25 @@
+ 
+    // var xRotationMatrix = new Float32Array(16);
+    // var yRotationMatrix = new Float32Array(16);
+    //
+    // Main render loop
+    //
+    // var identityMatrix = new Float32Array(16);
+    // glMatrix.mat4.identity(identityMatrix);
+    // var angle = 0;
+    // var loop = function () {
+      // angle = performance.now() / 1000 / 6 * 2 * Math.PI;
+      // glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
+      // glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
+      // glMatrix.mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
+      // gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+  
+      // gl.clearColor(0.75, 0.85, 0.8, 1.0);
+      // gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+      // drawElements is used whenever we have an index buffer
+      // gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+  
+      // requestAnimationFrame(loop);
+    // };
+    // requestAnimationFrame(loop);
