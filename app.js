@@ -33,6 +33,7 @@ const createProgram = (gl, vertexShader, fragmentShader) => {
 };
 
 var main = function () {
+
   const canvas = document.getElementById("surface");
   // gets WebGLRenderingContext
   var gl = canvas.getContext("webgl");
@@ -66,32 +67,20 @@ var main = function () {
   var matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
 	var matViewUniformLocation = gl.getUniformLocation(program, 'mView');
   var matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
-  
-  // create wall vertex buffer
-  var wallVertexBufferObj = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
-  setWallData(gl, 0.0, 0.0, 0.0);
-
-  // create wall index buffer
-  var wallIndexBufferObj = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);
-  setWallIndexBuffer(gl);
 
   // draws main scene
   drawScene();
 
-  // below are some helper functions
-  function drawScene() {
-    // clear canvas
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  function drawWall() {
+    // create wall vertex buffer
+    var wallVertexBufferObj = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
+    setWallData(gl, 0.0, 0.0, 0.0);
     
-    // enable culling and depth_test
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.CULL_FACE);
-    gl.frontFace(gl.CCW);
-    gl.cullFace(gl.BACK);
-    
+    // create wall index buffer
+    var wallIndexBufferObj = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);setWallIndexBuffer(gl);
+
     // Tell OpenGL state machine which program should be active.
     gl.useProgram(program);
   
@@ -118,6 +107,23 @@ var main = function () {
       6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
       3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
     );
+
+    gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+  }
+
+  function drawScene() {
+    // clear canvas
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    // enable culling and depth_test
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+    gl.frontFace(gl.CCW);
+    gl.cullFace(gl.BACK);
+
+    // Tell OpenGL state machine which program should be active.
+    gl.useProgram(program);
   
     // compute the matrices
     var worldMatrix = new Float32Array(16);
@@ -130,33 +136,9 @@ var main = function () {
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
-  
-    var xRotationMatrix = new Float32Array(16);
-    var yRotationMatrix = new Float32Array(16);
-    //
-    // Main render loop
-    //
-    var identityMatrix = new Float32Array(16);
-    glMatrix.mat4.identity(identityMatrix);
-    var angle = 0;
-    var loop = function () {
-      angle = performance.now() / 1000 / 6 * 2 * Math.PI;
-      // glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
-      // glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
-      // glMatrix.mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
-      // gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
-  
-      gl.clearColor(0.75, 0.85, 0.8, 1.0);
-      gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
-      // drawElements is used whenever we have an index buffer
-      gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
-  
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
+    drawWall();
   }
-
 };
 
 const setWallData = (gl, tx, ty, tz) => {
