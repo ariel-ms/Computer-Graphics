@@ -114,11 +114,11 @@ var main = function () {
   function drawPlane(planeTransforms) {
 
     // destructure plane transformation attrs
-    const { tx, ty, tz, worldProps } = planeTransforms;
+    const { translation, scale, worldProps } = planeTransforms;
 
     const planeBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, planeBuffer);
-    setPlaneData(gl, tx, ty);
+    setPlaneData(gl, translation, scale);
 
     // Tell OpenGL state machine which program should be active.
     gl.useProgram(program);
@@ -166,7 +166,7 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 2, -15], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 7, -25], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -189,9 +189,16 @@ var main = function () {
     drawWall(wall2Transforms);
 
     const planeTransforms = {
-      tx: 0.0,
-      ty: 0.0,
-      tz: 0.0,
+      translation: {
+        tx: 0.0,
+        ty: 0.0,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 10.0,
+        sy: 10.0,
+        sz: 1.0,
+      },
       worldProps: {
         worldMatrix,
         matWorldUniformLocation,
@@ -277,12 +284,14 @@ const setWallIndexBuffer = (gl) => {
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
 }
 
-const setPlaneData = (gl, tx, ty) => {
+const setPlaneData = (gl, translation, scale) => {
+  const { tx, ty, tz } = translation;
+  const { sx, sy } = scale;
   const positions = [
-    -1.0 + tx,  1.0 + ty,
-     1.0 + tx,  1.0 + ty,
-    -1.0 + tx, -1.0 + ty,
-     1.0 + tx, -1.0 + ty,
+    -1.0 * sx + tx,  1.0 * sy + ty,
+     1.0 * sx + tx,  1.0 * sy + ty,
+    -1.0 * sx + tx, -1.0 * sy + ty,
+     1.0 * sx + tx, -1.0 * sy + ty,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 }
