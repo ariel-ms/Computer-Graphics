@@ -71,7 +71,7 @@ var main = function () {
   // draws main scene
   requestAnimationFrame(drawScene);
 
-  function drawWall(transforms) {
+  function drawBricks(transforms) {
     const { translation, scale } = transforms;
 
     // create wall vertex buffer
@@ -176,6 +176,20 @@ var main = function () {
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
     // draw objects
+    const mainTowerTransforms = {
+      translation: {
+        tx: 0.0,
+        ty: 1.0,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 1.0,
+        sy: 1.0,
+        sz: 1.0,
+      }
+    }
+    drawBricks(mainTowerTransforms);
+
     const wall1Transforms = {
       translation: {
         tx: 6.0,
@@ -188,7 +202,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawWall(wall1Transforms);
+    drawBricks(wall1Transforms);
 
     const wall2Transforms = {
       translation: {
@@ -202,7 +216,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawWall(wall2Transforms);
+    drawBricks(wall2Transforms);
 
     const planeTransforms = {
       translation: {
