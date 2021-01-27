@@ -69,7 +69,7 @@ var main = function () {
   var matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
 
   // draws main scene
-  drawScene();
+  requestAnimationFrame(drawScene);
 
   function drawWall(transforms) {
     // create wall vertex buffer
@@ -144,7 +144,9 @@ var main = function () {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  function drawScene() {
+  function drawScene(time) {
+    time *= 0.0005;
+
     // clear canvas
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -164,13 +166,14 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 1, -15], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 2, -15], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
+    // draw objects
     const wall1Transforms = {
       tx: 2.0,
       ty: 1.0,
@@ -194,8 +197,9 @@ var main = function () {
         matWorldUniformLocation,
       },
     };
-
     drawPlane(planeTransforms);
+
+    requestAnimationFrame(drawScene);
   }
 };
 
