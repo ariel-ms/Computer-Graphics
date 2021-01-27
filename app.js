@@ -168,7 +168,7 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 7, -25], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [15, 15, -25], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -180,7 +180,7 @@ var main = function () {
       translation: {
         tx: 0.0,
         ty: 1.0,
-        tz: 0.0,
+        tz: 5.0,
       },
       scale: {
         sx: 1.0,
