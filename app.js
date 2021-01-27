@@ -179,12 +179,12 @@ var main = function () {
     const mainTowerTransforms = {
       translation: {
         tx: 0.0,
-        ty: 1.0,
+        ty: 3.0,
         tz: 5.0,
       },
       scale: {
         sx: 1.0,
-        sy: 1.0,
+        sy: 3.0,
         sz: 1.0,
       }
     }
@@ -193,12 +193,12 @@ var main = function () {
     const wall1Transforms = {
       translation: {
         tx: 6.0,
-        ty: 1.0,
+        ty: 1.5,
         tz: 0.0,
       },
       scale: {
         sx: 4.0,
-        sy: 1.0,
+        sy: 1.5,
         sz: 1.0,
       }
     }
@@ -207,12 +207,12 @@ var main = function () {
     const wall2Transforms = {
       translation: {
         tx: -6.0,
-        ty: 1.0,
+        ty: 1.5,
         tz: 0.0,
       },
       scale: {
         sx: 4.0,
-        sy: 1.0,
+        sy: 1.5,
         sz: 1.0,
       }
     }
