@@ -72,10 +72,12 @@ var main = function () {
   requestAnimationFrame(drawScene);
 
   function drawWall(transforms) {
+    const { translation, scale } = transforms;
+
     // create wall vertex buffer
     var wallVertexBufferObj = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
-    setWallData(gl, transforms.tx, transforms.ty, transforms.tz);
+    setWallData(gl, translation, scale);
     
     // create wall index buffer
     var wallIndexBufferObj = gl.createBuffer();
@@ -175,16 +177,30 @@ var main = function () {
 
     // draw objects
     const wall1Transforms = {
-      tx: 2.0,
-      ty: 1.0,
-      tz: 0.0,
+      translation: {
+        tx: 6.0,
+        ty: 1.0,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 4.0,
+        sy: 1.0,
+        sz: 1.0,
+      }
     }
     drawWall(wall1Transforms);
 
     const wall2Transforms = {
-      tx: -2.0,
-      ty: 1.0,
-      tz: 0.0,
+      translation: {
+        tx: -6.0,
+        ty: 1.0,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 4.0,
+        sy: 1.0,
+        sz: 1.0,
+      }
     }
     drawWall(wall2Transforms);
 
@@ -210,46 +226,48 @@ var main = function () {
   }
 };
 
-const setWallData = (gl, tx, ty, tz) => {
+const setWallData = (gl, translation, scale) => {
+  const { tx, ty, tz } = translation;
+  const { sx, sy, sz } = scale;
 
   var wallVertices = 
-  [ // X, Y, Z                         R, G, B
+  [ // X, Y, Z                                   R, G, B
 		// Top
-		-1.0 + tx, 1.0 + ty, -1.0 + tz,    0.5, 0.5, 0.5,
-		-1.0 + tx, 1.0 + ty, 1.0 + tz,     0.5, 0.5, 0.5,
-		1.0 + tx, 1.0 + ty, 1.0 + tz,      0.5, 0.5, 0.5,
-		1.0 + tx, 1.0 + ty, -1.0 + tz,     0.5, 0.5, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0.5, 0.5, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     0.5, 0.5, 0.5,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,      0.5, 0.5, 0.5,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,     0.5, 0.5, 0.5,
 
 		// Left
-		-1.0 + tx, 1.0 + ty, 1.0 + tz,    0.75, 0.25, 0.5,
-		-1.0 + tx, -1.0 + ty, 1.0 + tz,   0.75, 0.25, 0.5,
-		-1.0 + tx, -1.0 + ty, -1.0 + tz,  0.75, 0.25, 0.5,
-		-1.0 + tx, 1.0 + ty, -1.0 + tz,   0.75, 0.25, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0.75, 0.25, 0.5,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0.75, 0.25, 0.5,
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.75, 0.25, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.75, 0.25, 0.5,
 
 		// Right
-		1.0 + tx, 1.0 + ty, 1.0 + tz,    0.25, 0.25, 0.75,
-		1.0 + tx, -1.0 + ty, 1.0 + tz,   0.25, 0.25, 0.75,
-		1.0 + tx, -1.0 + ty, -1.0 + tz,  0.25, 0.25, 0.75,
-		1.0 + tx, 1.0 + ty, -1.0 + tz,   0.25, 0.25, 0.75,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0.25, 0.25, 0.75,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0.25, 0.25, 0.75,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.25, 0.25, 0.75,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.25, 0.25, 0.75,
 
 		// Front
-		1.0 + tx, 1.0 + ty, 1.0 + tz,     1.0, 0.0, 0.15,
-		1.0 + tx, -1.0 + ty, 1.0 + tz,    1.0, 0.0, 0.15,
-		-1.0 + tx, -1.0 + ty, 1.0 + tz,   1.0, 0.0, 0.15,
-		-1.0 + tx, 1.0 + ty, 1.0 + tz,    1.0, 0.0, 0.15,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     1.0, 0.0, 0.15,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    1.0, 0.0, 0.15,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   1.0, 0.0, 0.15,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    1.0, 0.0, 0.15,
 
 		// Back
-		1.0 + tx, 1.0 + ty, -1.0 + tz,    0.0, 1.0, 0.15,
-		1.0 + tx, -1.0 + ty, -1.0 + tz,   0.0, 1.0, 0.15,
-		-1.0 + tx, -1.0 + ty, -1.0 + tz,  0.0, 1.0, 0.15,
-		-1.0 + tx, 1.0 + ty, -1.0 + tz,   0.0, 1.0, 0.15,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0.0, 1.0, 0.15,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   0.0, 1.0, 0.15,
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.0, 1.0, 0.15,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.0, 1.0, 0.15,
 
 		// Bottom
-		-1.0 + tx, -1.0 + ty, -1.0 + tz,   0.5, 0.5, 1.0,
-		-1.0 + tx, -1.0 + ty, 1.0 + tz,    0.5, 0.5, 1.0,
-		1.0 + tx, -1.0 + ty, 1.0 + tz,     0.5, 0.5, 1.0,
-		1.0 + tx, -1.0 + ty, -1.0 + tz,    0.5, 0.5, 1.0,
-	];
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   0.5, 0.5, 1.0,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    0.5, 0.5, 1.0,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,     0.5, 0.5, 1.0,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,    0.5, 0.5, 1.0,
+  ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wallVertices), gl.STATIC_DRAW);
 }
