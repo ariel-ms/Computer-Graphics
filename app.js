@@ -239,6 +239,20 @@ var main = function () {
     }
     drawBricks(mainTowerTransforms, textureArray[1]);
 
+    const doorTransforms = {
+      translation: {
+        tx: 0.0,
+        ty: 1.5,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 2.0,
+        sy: 1.5,
+        sz: 0.3,
+      },
+    };
+    drawBricks(doorTransforms, textureArray[1]);
+
     const wall1Transforms = {
       translation: {
         tx: 6.0,
