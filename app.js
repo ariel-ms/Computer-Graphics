@@ -71,7 +71,7 @@ var main = function () {
   // draws main scene
   requestAnimationFrame(drawScene);
 
-  function drawBricks(transforms) {
+  function drawBricks(transforms, texture) {
     const { translation, scale } = transforms;
 
     // create wall vertex buffer
@@ -111,22 +111,23 @@ var main = function () {
     );
 
     // add texture
-    var brickTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, brickTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      document.getElementById("bricks-img")
-    );
-    gl.activeTexture(gl.TEXTURE0);
+    // var brickTexture = gl.createTexture();
+    // gl.bindTexture(gl.TEXTURE_2D, brickTexture);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    // gl.texImage2D(
+    //   gl.TEXTURE_2D,
+    //   0,
+    //   gl.RGBA,
+    //   gl.RGBA,
+    //   gl.UNSIGNED_BYTE,
+    //   document.getElementById("bricks-img")
+    // );
+    // gl.activeTexture(gl.TEXTURE0);
 
+    gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
 
@@ -163,6 +164,33 @@ var main = function () {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
+  function createTextures(images) {
+    var textures = [];
+    for (var i = 0; i < images.length; i++) {
+
+      var texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        document.getElementById(images[i])
+      );
+      // gl.activeTexture(gl.TEXTURE0);
+
+      textures.push(texture);;
+    }
+    return textures;
+  }
+
   function drawScene(time) {
     time *= 0.0005;
 
@@ -192,6 +220,10 @@ var main = function () {
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
+    // create textures
+    const images = ["bricks-img", "light-brick-img", "grass-img"];
+    var textureArray = createTextures(images);
+
     // draw objects
     const mainTowerTransforms = {
       translation: {
@@ -205,7 +237,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(mainTowerTransforms);
+    drawBricks(mainTowerTransforms, textureArray[1]);
 
     const wall1Transforms = {
       translation: {
@@ -219,7 +251,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(wall1Transforms);
+    drawBricks(wall1Transforms, textureArray[0]);
 
     const wall2Transforms = {
       translation: {
@@ -233,7 +265,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(wall2Transforms);
+    drawBricks(wall2Transforms, textureArray[0]);
 
     const planeTransforms = {
       translation: {
