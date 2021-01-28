@@ -221,7 +221,12 @@ var main = function () {
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
     // create textures
-    const images = ["bricks-img", "light-brick-img", "grass-img"];
+    const images = [
+      "light-brick-img",
+      "castle-door-img",
+      "bricks-img",
+      "grass-img",
+    ];
     var textureArray = createTextures(images);
 
     // draw objects
@@ -237,7 +242,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(mainTowerTransforms, textureArray[1]);
+    drawBricks(mainTowerTransforms, textureArray[0]);
 
     const doorTransforms = {
       translation: {
@@ -265,7 +270,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(wall1Transforms, textureArray[0]);
+    drawBricks(wall1Transforms, textureArray[2]);
 
     const wall2Transforms = {
       translation: {
@@ -279,7 +284,7 @@ var main = function () {
         sz: 1.0,
       }
     }
-    drawBricks(wall2Transforms, textureArray[0]);
+    drawBricks(wall2Transforms, textureArray[2]);
 
     const planeTransforms = {
       translation: {
