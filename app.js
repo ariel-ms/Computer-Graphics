@@ -196,6 +196,7 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
+    // [0, 0, 10] to look just below the tower
     glMatrix.mat4.lookAt(viewMatrix, [15, 15, -25], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
@@ -208,6 +209,7 @@ var main = function () {
       "light-brick-img",
       "castle-door-img",
       "bricks-img",
+      "house-img",
       "grass-img",
     ];
     var textureArray = createTextures(images);
@@ -240,6 +242,20 @@ var main = function () {
       },
     };
     drawBricks(doorTransforms, textureArray[1]);
+
+    const houseTransforms = {
+      translation: {
+        tx: 0.0,
+        ty: 7.0,
+        tz: 5.0,
+      },
+      scale: {
+        sx: 1.5,
+        sy: 1.5,
+        sz: 1.5,
+      },
+    };
+    drawBricks(houseTransforms, textureArray[3]);
 
     const wall1Transforms = {
       translation: {
@@ -285,7 +301,7 @@ var main = function () {
         matWorldUniformLocation,
       },
     };
-    gl.bindTexture(gl.TEXTURE_2D, textureArray[3]);
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[4]);
     drawPlane(planeTransforms);
 
     requestAnimationFrame(drawScene);
