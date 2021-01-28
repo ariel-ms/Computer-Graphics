@@ -110,23 +110,6 @@ var main = function () {
       3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
     );
 
-    // add texture
-    // var brickTexture = gl.createTexture();
-    // gl.bindTexture(gl.TEXTURE_2D, brickTexture);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    // gl.texImage2D(
-    //   gl.TEXTURE_2D,
-    //   0,
-    //   gl.RGBA,
-    //   gl.RGBA,
-    //   gl.UNSIGNED_BYTE,
-    //   document.getElementById("bricks-img")
-    // );
-    // gl.activeTexture(gl.TEXTURE0);
-
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
@@ -302,6 +285,7 @@ var main = function () {
         matWorldUniformLocation,
       },
     };
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[3]);
     drawPlane(planeTransforms);
 
     requestAnimationFrame(drawScene);
