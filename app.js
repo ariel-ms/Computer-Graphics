@@ -61,7 +61,7 @@ var main = function () {
 
   // get vertex attribute locations
   var positionAttrLocation = gl.getAttribLocation(program, 'vertPosition');
-  var colorAttrLocation = gl.getAttribLocation(program, 'vertColor');
+  var texCoordAttrLocation = gl.getAttribLocation(program, 'vertTexCoord');
 
   // get uniform locations
   var matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
@@ -94,21 +94,38 @@ var main = function () {
       3, // Number of elements per attribute
       gl.FLOAT, // Type of elements
       gl.FALSE,
-      6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+      5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
       0 // Offset from the beginning of a single vertex to this attribute
     );
   
     // enable color attr
-    gl.enableVertexAttribArray(colorAttrLocation);
+    gl.enableVertexAttribArray(texCoordAttrLocation);
   
     gl.vertexAttribPointer(
-      colorAttrLocation, // Attribute location
-      3, // Number of elements per attribute
+      texCoordAttrLocation, // Attribute location
+      2, // Number of elements per attribute
       gl.FLOAT, // Type of elements
       gl.FALSE,
-      6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+      5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
       3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
     );
+
+    // add texture
+    var brickTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, brickTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      document.getElementById("bricks-img")
+    );
+    gl.activeTexture(gl.TEXTURE0);
 
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
@@ -245,42 +262,42 @@ const setWallData = (gl, translation, scale) => {
   const { sx, sy, sz } = scale;
 
   var wallVertices = 
-  [ // X, Y, Z                                   R, G, B
+  [ // X, Y, Z                                        U, V
 		// Top
-		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0.5, 0.5, 0.5,
-		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     0.5, 0.5, 0.5,
-		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,      0.5, 0.5, 0.5,
-		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,     0.5, 0.5, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0, 0,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     0, 1,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,      1, 1,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,     1, 0,
 
 		// Left
-		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0.75, 0.25, 0.5,
-		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0.75, 0.25, 0.5,
-		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.75, 0.25, 0.5,
-		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.75, 0.25, 0.5,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0, 0,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   1, 0,
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  1, 1,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0, 1,
 
 		// Right
-		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0.25, 0.25, 0.75,
-		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0.25, 0.25, 0.75,
-		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.25, 0.25, 0.75,
-		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.25, 0.25, 0.75,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    1, 1,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0, 1,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0, 0,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   1, 0,
 
 		// Front
-		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     1.0, 0.0, 0.15,
-		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    1.0, 0.0, 0.15,
-		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   1.0, 0.0, 0.15,
-		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    1.0, 0.0, 0.15,
+		1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,     1, 1,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    1, 0,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,   0, 0,
+		-1.0 * sx + tx, 1.0 * sy + ty, 1.0 * sz + tz,    0, 1,
 
 		// Back
-		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0.0, 1.0, 0.15,
-		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   0.0, 1.0, 0.15,
-		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  0.0, 1.0, 0.15,
-		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   0.0, 1.0, 0.15,
+		1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,    0, 0,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   0, 1,
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,  1, 1,
+		-1.0 * sx + tx, 1.0 * sy + ty, -1.0 * sz + tz,   1, 0,
 
 		// Bottom
-		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   0.5, 0.5, 1.0,
-		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    0.5, 0.5, 1.0,
-		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,     0.5, 0.5, 1.0,
-		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,    0.5, 0.5, 1.0,
+		-1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,   1, 1,
+		-1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,    1, 0,
+		1.0 * sx + tx, -1.0 * sy + ty, 1.0 * sz + tz,     0, 0,
+		1.0 * sx + tx, -1.0 * sy + ty, -1.0 * sz + tz,    0, 1,
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wallVertices), gl.STATIC_DRAW);
