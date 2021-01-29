@@ -16,7 +16,7 @@ Por último, es probable que este proyecto utilice algunas librerías para facil
 
 Es necesario tener instalado servez que permite iniciar un servidor local para poder mostrar las texturas de los objectos.
 
-* Para instalar correr `npm install -g servez`
+* Para instalar correr `sudo npm -g install servez`
 
 ### Run
 
