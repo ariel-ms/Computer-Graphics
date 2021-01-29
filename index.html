@@ -16,7 +16,11 @@
       precision mediump float;
       attribute vec3 vertPosition;
       attribute vec2 vertTexCoord;
+      attribute vec3 vertNormal;
+
       varying vec2 fragTexCoord;
+      varying vec3 fragNormal;
+
       uniform mat4 mWorld;
       uniform mat4 mView;
       uniform mat4 mProj;
@@ -24,17 +28,30 @@
       void main()
       {
         fragTexCoord = vertTexCoord;
+        fragNormal = (mWorld * vec4(vertNormal, 0.0)).xyz;
+
         gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);
       }
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
       precision mediump float;
+
       varying vec2 fragTexCoord;
+      varying vec3 fragNormal;
+
       uniform sampler2D sampler;
+      
       void main()
       {
-        gl_FragColor = texture2D(sampler, fragTexCoord);
+        vec3 ambientLightIntensity = vec3(0.2, 0.2, 0.5);
+        vec3 sunLightIntensity = vec3(0.7, 0.6, 0.4);
+        vec3 sunLightDirection = normalize(vec3(7.0, -4.0, -2.0));
+
+        vec4 texel = texture2D(sampler, fragTexCoord);
+        vec3 lightIntensity = ambientLightIntensity + sunLightIntensity * max(dot(fragNormal, sunLightDirection), 0.0);
+
+        gl_FragColor = vec4(texel.rgb * lightIntensity, texel.a);
       }
     </script>
 

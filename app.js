@@ -1,7 +1,8 @@
 // Author - Ariel Mendez | A01020690
 // Resouces or tutorials that inspired this project
 // tutorial - https://www.youtube.com/watch?v=kB0ZVUrI4Aw
-// blog - https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
+// webgl fundamentals blog - https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
+// lighting in webgl - https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Lighting_in_WebGL#building_the_normals_for_the_vertices
 
 const createShader = (gl, type, source) => {
   var shader = gl.createShader(type);
@@ -62,6 +63,7 @@ var main = function () {
   // get vertex attribute locations
   var positionAttrLocation = gl.getAttribLocation(program, 'vertPosition');
   var texCoordAttrLocation = gl.getAttribLocation(program, 'vertTexCoord');
+  var normalAttrLocation = gl.getAttribLocation(program, 'vertNormal');
 
   // get uniform locations
   var matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
@@ -78,10 +80,16 @@ var main = function () {
     var wallVertexBufferObj = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
     setWallVertexData(gl, translation, scale);
+
+    // create normal vertex buffer
+    var normalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    setWallNormalsData(gl);
     
     // create wall index buffer
     var wallIndexBufferObj = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);setWallIndexBuffer(gl);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);
+    setWallIndexBuffer(gl);
 
     // Tell OpenGL state machine which program should be active.
     gl.useProgram(program);
@@ -89,6 +97,7 @@ var main = function () {
     // enable position attr
     gl.enableVertexAttribArray(positionAttrLocation);
   
+    gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
     gl.vertexAttribPointer(
       positionAttrLocation, // Attribute location
       3, // Number of elements per attribute
@@ -109,8 +118,21 @@ var main = function () {
       5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
       3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
     );
-
     gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // enable normal attr
+    gl.enableVertexAttribArray(normalAttrLocation);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.vertexAttribPointer(
+      normalAttrLocation,
+      3,
+      gl.FLOAT,
+      gl.TRUE,
+      0,
+      0
+    );
+
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   }
 
@@ -412,6 +434,52 @@ const setWallVertexData = (gl, translation, scale) => {
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wallVertices), gl.STATIC_DRAW);
+}
+
+const setWallNormalsData = (gl) => {
+  const vertexNormals = [
+    // Front
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+     0.0,  0.0,  1.0,
+
+    // Back
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+     0.0,  0.0, -1.0,
+
+    // Top
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+     0.0,  1.0,  0.0,
+
+    // Bottom
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+     0.0, -1.0,  0.0,
+
+    // Right
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+     1.0,  0.0,  0.0,
+
+    // Left
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0,
+    -1.0,  0.0,  0.0
+  ]
+
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array(vertexNormals),
+    gl.STATIC_DRAW
+  );
 }
 
 const setWallIndexBuffer = (gl) => {
