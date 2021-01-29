@@ -197,7 +197,7 @@ var main = function () {
 
     glMatrix.mat4.identity(worldMatrix);
     // [0, 0, 10] to look just below the tower
-    glMatrix.mat4.lookAt(viewMatrix, [15, 15, -25], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [30, 17, -25], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -285,6 +285,35 @@ var main = function () {
       }
     }
     drawBricks(wall2Transforms, textureArray[2]);
+
+    // Back walls
+    const leftBackWall = {
+      translation: {
+        tx: 4.0,
+        ty: 1.5,
+        tz: 9.0,
+      },
+      scale: {
+        sx: 4.0,
+        sy: 1.5,
+        sz: 1.0,
+      }
+    }
+    drawBricks(leftBackWall, textureArray[2]);
+
+    const rightBackWall = {
+      translation: {
+        tx: -4.0,
+        ty: 1.5,
+        tz: 9.0,
+      },
+      scale: {
+        sx: 4.0,
+        sy: 1.5,
+        sz: 1.0,
+      }
+    }
+    drawBricks(rightBackWall, textureArray[2]);
 
     // Lateral walls
     const leftWall = {
