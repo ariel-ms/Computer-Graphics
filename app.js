@@ -77,7 +77,7 @@ var main = function () {
     // create wall vertex buffer
     var wallVertexBufferObj = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
-    setWallData(gl, translation, scale);
+    setWallVertexData(gl, translation, scale);
     
     // create wall index buffer
     var wallIndexBufferObj = gl.createBuffer();
@@ -368,7 +368,7 @@ var main = function () {
   }
 };
 
-const setWallData = (gl, translation, scale) => {
+const setWallVertexData = (gl, translation, scale) => {
   const { tx, ty, tz } = translation;
   const { sx, sy, sz } = scale;
 
