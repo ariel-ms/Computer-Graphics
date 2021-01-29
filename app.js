@@ -74,7 +74,7 @@ var main = function () {
   requestAnimationFrame(drawScene);
 
   function drawBricks(transforms, texture) {
-    const { translation, scale } = transforms;
+    const { translation, scale, worldProps } = transforms;
 
     // create wall vertex buffer
     var wallVertexBufferObj = gl.createBuffer();
@@ -85,7 +85,7 @@ var main = function () {
     var normalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     setWallNormalsData(gl);
-    
+
     // create wall index buffer
     var wallIndexBufferObj = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallIndexBufferObj);
@@ -93,10 +93,10 @@ var main = function () {
 
     // Tell OpenGL state machine which program should be active.
     gl.useProgram(program);
-  
+
     // enable position attr
     gl.enableVertexAttribArray(positionAttrLocation);
-  
+
     gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexBufferObj);
     gl.vertexAttribPointer(
       positionAttrLocation, // Attribute location
@@ -106,10 +106,10 @@ var main = function () {
       5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
       0 // Offset from the beginning of a single vertex to this attribute
     );
-  
+
     // enable color attr
     gl.enableVertexAttribArray(texCoordAttrLocation);
-  
+
     gl.vertexAttribPointer(
       texCoordAttrLocation, // Attribute location
       2, // Number of elements per attribute
@@ -124,16 +124,37 @@ var main = function () {
     gl.enableVertexAttribArray(normalAttrLocation);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    gl.vertexAttribPointer(
-      normalAttrLocation,
-      3,
-      gl.FLOAT,
-      gl.TRUE,
-      0,
-      0
-    );
+    gl.vertexAttribPointer(normalAttrLocation, 3, gl.FLOAT, gl.TRUE, 0, 0);
+
+    const { rotate } = worldProps;
+    if (rotate) {
+      var identityMatrix = new Float32Array(16);
+      glMatrix.mat4.identity(identityMatrix);
+
+      glMatrix.mat4.rotate(
+        worldProps.worldMatrix,
+        identityMatrix,
+        -Math.PI / 2,
+        [1, 0, 0]
+      );
+      gl.uniformMatrix4fv(
+        worldProps.matWorldUniformLocation,
+        gl.FALSE,
+        worldProps.worldMatrix
+      );
+    }
 
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+
+    // reset rotation props
+    if (rotate) {
+      glMatrix.mat4.identity(worldProps.worldMatrix);
+      gl.uniformMatrix4fv(
+        worldProps.matWorldUniformLocation,
+        gl.FALSE,
+        worldProps.worldMatrix
+      );
+    }
   }
 
   function drawPlane(planeTransforms) {
@@ -160,13 +181,36 @@ var main = function () {
       0 // Offset from the beginning of a single vertex to this attribute
     );
 
-    var identityMatrix = new Float32Array(16);
-    glMatrix.mat4.identity(identityMatrix);
+    const { rotate } = worldProps;
+    
+    if (rotate) {
+      var identityMatrix = new Float32Array(16);
+      glMatrix.mat4.identity(identityMatrix);
 
-    glMatrix.mat4.rotate(worldProps.worldMatrix, identityMatrix, Math.PI / 2, [1, 0, 0]);
-    gl.uniformMatrix4fv(worldProps.matWorldUniformLocation, gl.FALSE, worldProps.worldMatrix);
+      glMatrix.mat4.rotate(
+        worldProps.worldMatrix,
+        identityMatrix,
+        Math.PI / 2,
+        [1, 0, 0]
+      );
+      gl.uniformMatrix4fv(
+        worldProps.matWorldUniformLocation,
+        gl.FALSE,
+        worldProps.worldMatrix
+      );
+    }
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // reset rotation props
+    if (rotate) {
+      glMatrix.mat4.identity(worldProps.worldMatrix);
+      gl.uniformMatrix4fv(
+        worldProps.matWorldUniformLocation,
+        gl.FALSE,
+        worldProps.worldMatrix
+      );
+    }
   }
 
   function createTextures(images) {
@@ -247,7 +291,12 @@ var main = function () {
         sx: 1.0,
         sy: 3.0,
         sz: 1.0,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(mainTowerTransforms, textureArray[0]);
 
@@ -261,6 +310,11 @@ var main = function () {
         sx: 2.0,
         sy: 1.5,
         sz: 0.3,
+      },
+      worldProps: {
+        rotate: true,
+        worldMatrix,
+        matWorldUniformLocation,
       },
     };
     drawBricks(doorTransforms, textureArray[1]);
@@ -276,6 +330,11 @@ var main = function () {
         sy: 1.5,
         sz: 1.5,
       },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     };
     drawBricks(houseTransforms, textureArray[3]);
 
@@ -290,7 +349,12 @@ var main = function () {
         sx: 4.0,
         sy: 1.5,
         sz: 1.0,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(wall1Transforms, textureArray[2]);
 
@@ -304,7 +368,12 @@ var main = function () {
         sx: 4.0,
         sy: 1.5,
         sz: 1.0,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(wall2Transforms, textureArray[2]);
 
@@ -319,7 +388,12 @@ var main = function () {
         sx: 4.0,
         sy: 1.5,
         sz: 1.0,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(leftBackWall, textureArray[2]);
 
@@ -333,7 +407,12 @@ var main = function () {
         sx: 4.0,
         sy: 1.5,
         sz: 1.0,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(rightBackWall, textureArray[2]);
 
@@ -348,7 +427,12 @@ var main = function () {
         sx: 1.0,
         sy: 1.5,
         sz: 5.5,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(leftWall, textureArray[2]);
 
@@ -362,11 +446,16 @@ var main = function () {
         sx: 1.0,
         sy: 1.5,
         sz: 5.5,
-      }
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
     }
     drawBricks(rightWall, textureArray[2]);
 
-
+    // draw plane
     const planeTransforms = {
       translation: {
         tx: 0.0,
@@ -374,11 +463,12 @@ var main = function () {
         tz: 0.0,
       },
       scale: {
-        sx: 10.0,
-        sy: 10.0,
+        sx: 11.0,
+        sy: 11.0,
         sz: 1.0,
       },
       worldProps: {
+        rotate: true,
         worldMatrix,
         matWorldUniformLocation,
       },
