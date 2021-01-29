@@ -206,7 +206,7 @@ var main = function () {
 
     // create textures
     const images = [
-      "light-brick-img",
+      "tower-bricks-img",
       "castle-door-img",
       "bricks-img",
       "house-img",
