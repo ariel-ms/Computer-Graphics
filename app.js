@@ -257,6 +257,7 @@ var main = function () {
     };
     drawBricks(houseTransforms, textureArray[3]);
 
+    // Front walls
     const wall1Transforms = {
       translation: {
         tx: 6.0,
@@ -284,6 +285,36 @@ var main = function () {
       }
     }
     drawBricks(wall2Transforms, textureArray[2]);
+
+    // Lateral walls
+    const leftWall = {
+      translation: {
+        tx: 9.1,
+        ty: 1.5,
+        tz: 4.4,
+      },
+      scale: {
+        sx: 1.0,
+        sy: 1.5,
+        sz: 5.5,
+      }
+    }
+    drawBricks(leftWall, textureArray[2]);
+
+    const rightWall = {
+      translation: {
+        tx: -9.1,
+        ty: 1.5,
+        tz: 4.4,
+      },
+      scale: {
+        sx: 1.0,
+        sy: 1.5,
+        sz: 5.5,
+      }
+    }
+    drawBricks(rightWall, textureArray[2]);
+
 
     const planeTransforms = {
       translation: {
