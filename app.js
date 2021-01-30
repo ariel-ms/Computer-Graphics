@@ -278,6 +278,7 @@ var main = function () {
       "bricks-img",
       "house-img",
       "grass-img",
+      "water-img",
     ];
     var textureArray = createTextures(images);
 
@@ -465,8 +466,28 @@ var main = function () {
     }
     drawBricks(rightWall, textureArray[2]);
 
-    // draw plane
-    const planeTransforms = {
+    // draw planes
+    const waterTransforms = {
+      translation: {
+        tx: 0.0,
+        ty: -1.5,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 11.0,
+        sy: 1.5,
+        sz: 1.0,
+      },
+      worldProps: {
+        rotate: true,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
+    };
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[5]);
+    drawPlane(waterTransforms);
+
+    const grassTransforms = {
       translation: {
         tx: 0.0,
         ty: 0.0,
@@ -484,7 +505,7 @@ var main = function () {
       },
     };
     gl.bindTexture(gl.TEXTURE_2D, textureArray[4]);
-    drawPlane(planeTransforms);
+    drawPlane(grassTransforms);
 
     requestAnimationFrame(drawScene);
   }
