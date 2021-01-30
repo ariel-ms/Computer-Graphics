@@ -128,13 +128,14 @@ var main = function () {
 
     const { rotate } = worldProps;
     if (rotate) {
+      const { rotationFunction, angle } = worldProps;
       var identityMatrix = new Float32Array(16);
       glMatrix.mat4.identity(identityMatrix);
 
       glMatrix.mat4.rotate(
         worldProps.worldMatrix,
         identityMatrix,
-        -Math.PI / 2,
+        rotationFunction(angle),
         [1, 0, 0]
       );
       gl.uniformMatrix4fv(
@@ -300,6 +301,13 @@ var main = function () {
     }
     drawBricks(mainTowerTransforms, textureArray[0]);
 
+    var x = time % 2;
+    if (x <= 1) {
+      doorAngle = x;
+    } else {
+      doorAngle = -x + 2;
+    }
+
     const doorTransforms = {
       translation: {
         tx: 0.0,
@@ -313,6 +321,8 @@ var main = function () {
       },
       worldProps: {
         rotate: true,
+        angle: doorAngle,
+        rotationFunction: (angle) => -Math.asin(angle),
         worldMatrix,
         matWorldUniformLocation,
       },
