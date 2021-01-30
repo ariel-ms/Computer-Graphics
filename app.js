@@ -279,6 +279,7 @@ var main = function () {
       "house-img",
       "grass-img",
       "water-img",
+      "path-img",
     ];
     var textureArray = createTextures(images);
 
@@ -467,6 +468,26 @@ var main = function () {
     drawBricks(rightWall, textureArray[2]);
 
     // draw planes
+    const pathTransforms = {
+      translation: {
+        tx: 0.0,
+        ty: -7.0,
+        tz: 0.0,
+      },
+      scale: {
+        sx: 1.5,
+        sy: 4.0,
+        sz: 1.0,
+      },
+      worldProps: {
+        rotate: true,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
+    };
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[6]);
+    drawPlane(pathTransforms);
+
     const waterTransforms = {
       translation: {
         tx: 0.0,
