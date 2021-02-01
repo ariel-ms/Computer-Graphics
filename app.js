@@ -508,6 +508,44 @@ var main = function () {
     }
     drawBricks(treeTop1, textureArray[8]);
 
+    const baseTree2 = {
+      translation: {
+        tx: -0.5,
+        ty: 1.5,
+        tz: -6.0,
+      },
+      scale: {
+        sx: 0.2,
+        sy: 0.7,
+        sz: 0.2,
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
+    }
+    drawBricks(baseTree2, textureArray[7]);
+
+    const treeTop2 = {
+      translation: {
+        tx: -0.5,
+        ty: 2.7,
+        tz: -6.0,
+      },
+      scale: {
+        sx: 0.5,
+        sy: 0.5,
+        sz: 0.5,
+      },
+      worldProps: {
+        rotate: false,
+        worldMatrix,
+        matWorldUniformLocation,
+      },
+    }
+    drawBricks(treeTop2, textureArray[8]);
+
     // draw planes
     const pathTransforms = {
       translation: {
