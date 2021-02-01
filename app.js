@@ -182,7 +182,7 @@ var main = function () {
       0 // Offset from the beginning of a single vertex to this attribute
     );
 
-    const { rotate } = worldProps;
+    const { rotate, angle } = worldProps;
     
     if (rotate) {
       var identityMatrix = new Float32Array(16);
@@ -191,7 +191,7 @@ var main = function () {
       glMatrix.mat4.rotate(
         worldProps.worldMatrix,
         identityMatrix,
-        Math.PI / 2,
+        angle,
         [1, 0, 0]
       );
       gl.uniformMatrix4fv(
@@ -261,9 +261,11 @@ var main = function () {
     var worldMatrix = new Float32Array(16);
     var viewMatrix = new Float32Array(16);
     var projMatrix = new Float32Array(16);
+    var distance = 30;
 
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [30, 17, -25], [0, 0, 0], [0, 1, 0]);
+    // lookAt value [30, 17, -25]
+    glMatrix.mat4.lookAt(viewMatrix, [distance * Math.cos(time), 13, distance * Math.sin(time)], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -395,7 +397,7 @@ var main = function () {
       translation: {
         tx: 4.0,
         ty: 1.5,
-        tz: 9.0,
+        tz: 8.9,
       },
       scale: {
         sx: 4.5,
@@ -414,7 +416,7 @@ var main = function () {
       translation: {
         tx: -4.5,
         ty: 1.5,
-        tz: 9.0,
+        tz: 8.9,
       },
       scale: {
         sx: 4.0,
@@ -635,6 +637,7 @@ var main = function () {
       },
       worldProps: {
         rotate: true,
+        angle: 1.58825,
         worldMatrix,
         matWorldUniformLocation,
       },
@@ -655,6 +658,7 @@ var main = function () {
       },
       worldProps: {
         rotate: true,
+        angle: 1.58825,
         worldMatrix,
         matWorldUniformLocation,
       },
@@ -675,6 +679,7 @@ var main = function () {
       },
       worldProps: {
         rotate: true,
+        angle: Math.PI / 2,
         worldMatrix,
         matWorldUniformLocation,
       },
