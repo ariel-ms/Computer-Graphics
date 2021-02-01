@@ -473,7 +473,7 @@ var main = function () {
     // draw trees
     const baseTree1 = {
       translation: {
-        tx: 2.7,
+        tx: 1.7,
         ty: 1.0,
         tz: -6.0,
       },
@@ -492,7 +492,7 @@ var main = function () {
 
     const treeTop1 = {
       translation: {
-        tx: 2.7,
+        tx: 1.7,
         ty: 2.1,
         tz: -6.0,
       },
@@ -549,7 +549,7 @@ var main = function () {
 
     const baseTree3 = {
       translation: {
-        tx: 2.7,
+        tx: 1.7,
         ty: 1.0,
         tz: -10.0,
       },
@@ -568,7 +568,7 @@ var main = function () {
 
     const treeTop3 = {
       translation: {
-        tx: 2.7,
+        tx: 1.7,
         ty: 2.1,
         tz: -10.0,
       },
@@ -627,12 +627,12 @@ var main = function () {
     const pathTransforms = {
       translation: {
         tx: 0.0,
-        ty: -7.0,
+        ty: -6.9,
         tz: 0.0,
       },
       scale: {
         sx: 1.5,
-        sy: 4.0,
+        sy: 3.9,
         sz: 1.0,
       },
       worldProps: {
