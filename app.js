@@ -242,7 +242,7 @@ var main = function () {
   }
 
   function drawScene(time) {
-    time *= 0.0005;
+    time *= 0.00009;
 
     // clear canvas
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
@@ -263,7 +263,6 @@ var main = function () {
     var projMatrix = new Float32Array(16);
 
     glMatrix.mat4.identity(worldMatrix);
-    // [0, 0, 10] to look just below the tower
     glMatrix.mat4.lookAt(viewMatrix, [30, 17, -25], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
   
@@ -399,7 +398,7 @@ var main = function () {
         tz: 9.0,
       },
       scale: {
-        sx: 4.0,
+        sx: 4.5,
         sy: 1.5,
         sz: 1.0,
       },
@@ -413,7 +412,7 @@ var main = function () {
 
     const rightBackWall = {
       translation: {
-        tx: -4.0,
+        tx: -4.5,
         ty: 1.5,
         tz: 9.0,
       },
@@ -472,8 +471,8 @@ var main = function () {
     // draw trees
     const baseTree1 = {
       translation: {
-        tx: 3.5,
-        ty: 1.5,
+        tx: 2.7,
+        ty: 1.0,
         tz: -6.0,
       },
       scale: {
@@ -491,8 +490,8 @@ var main = function () {
 
     const treeTop1 = {
       translation: {
-        tx: 3.5,
-        ty: 2.7,
+        tx: 2.7,
+        ty: 2.1,
         tz: -6.0,
       },
       scale: {
@@ -510,8 +509,8 @@ var main = function () {
 
     const baseTree2 = {
       translation: {
-        tx: -0.5,
-        ty: 1.5,
+        tx: -1.7,
+        ty: 1.0,
         tz: -6.0,
       },
       scale: {
@@ -529,8 +528,8 @@ var main = function () {
 
     const treeTop2 = {
       translation: {
-        tx: -0.5,
-        ty: 2.7,
+        tx: -1.7,
+        ty: 2.1,
         tz: -6.0,
       },
       scale: {
@@ -548,8 +547,8 @@ var main = function () {
 
     const baseTree3 = {
       translation: {
-        tx: 3.5,
-        ty: 1.5,
+        tx: 2.7,
+        ty: 1.0,
         tz: -10.0,
       },
       scale: {
@@ -567,8 +566,8 @@ var main = function () {
 
     const treeTop3 = {
       translation: {
-        tx: 3.5,
-        ty: 2.7,
+        tx: 2.7,
+        ty: 2.1,
         tz: -10.0,
       },
       scale: {
@@ -586,8 +585,8 @@ var main = function () {
 
     const baseTree4 = {
       translation: {
-        tx: -0.5,
-        ty: 1.5,
+        tx: -1.7,
+        ty: 1.0,
         tz: -10.0,
       },
       scale: {
@@ -605,8 +604,8 @@ var main = function () {
 
     const treeTop4 = {
       translation: {
-        tx: -0.5,
-        ty: 2.7,
+        tx: -1.7,
+        ty: 2.1,
         tz: -10.0,
       },
       scale: {
